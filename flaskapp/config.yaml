@@ -1,0 +1,5 @@
+host : 'localhost'
+user : 'root'
+password:
+db: 'new_schema'
+port: 3306

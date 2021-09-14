@@ -21,39 +21,29 @@ mysql = MySQL(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index1():
+def index2():
     if request.method == "GET":
         try:
             cur = mysql.connection.cursor()
             cur.execute("SELECT * FROM covid2020")
             data = cur.fetchall()
+            cur1 = mysql.connection.cursor()
+            cur1.execute("SELECT * FROM covid2021")
+            data1 = cur1.fetchall()
+            cur2 = mysql.connection.cursor()
+            cur2.execute("SELECT * FROM patients")
+            data2 = cur2.fetchall()
+            cur3 = mysql.connection.cursor()
+            cur3.execute("SELECT * FROM statesid")
+            data3 = cur3.fetchall()
 
+            return render_template('index.html', titles1=data1, titles=data, titles2=data2, titles3=data3 )
         except mysql.connector.Error as err:
             print("Something went wrong: {}".format(err))
 
         finally:
-            cur.close()
+            cur1.close()
 
-        return render_template('index.html', titles=data)
-    else:
-        return render_template('index.html')
-
-
-@app.route('/', methods=['GET', 'POST'])
-def index2():
-    if request.method == "GET":
-        try:
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM covid2021")
-            data = cur.fetchall()
-
-        except mysql.connector.Error as err:
-            print("Something went wrong: {}".format(err))
-
-        finally:
-            cur.close()
-
-        return render_template('index.html', titles1=data)
     else:
         return render_template('index.html')
 
@@ -106,7 +96,8 @@ def update1():
         cases = request.form['cases']
         deaths = request.form['deaths']
         cur = mysql.connection.cursor()
-        cur.execute(" UPDATE covid2021 SET id=%s, state=%s, cases=%s, deaths=%s WHERE id=%s", (id, state, cases, deaths))
+        cur.execute(" UPDATE covid2021 SET id=%s, state=%s, cases=%s, deaths=%s WHERE id=%s",
+                    (id, state, cases, deaths))
         flash("Data Updated Successfully")
         mysql.connection.commit()
         return render_template('index.html')
@@ -123,7 +114,8 @@ def update2():
         cases = request.form['cases']
         deaths = request.form['deaths']
         cur = mysql.connection.cursor()
-        cur.execute(" UPDATE covid2021 SET id=%s, state=%s, cases=%s, deaths=%s WHERE id=%s", (id, state, cases, deaths))
+        cur.execute(" UPDATE covid2021 SET id=%s, state=%s, cases=%s, deaths=%s WHERE id=%s",
+                    (id, state, cases, deaths))
         flash("Data Updated Successfully")
         mysql.connection.commit()
         return render_template('index.html')
